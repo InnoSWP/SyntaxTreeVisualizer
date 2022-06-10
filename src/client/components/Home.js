@@ -45,6 +45,8 @@ export default class Home extends Component {
             parent: document.getElementById("editor"),
             mode: "javascript"
         })
+
+
     }
 
 
