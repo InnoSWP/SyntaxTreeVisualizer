@@ -10,6 +10,7 @@ import {
     lineNumbers,
     placeholder
 } from "@codemirror/view";
+import {JavaScriptParser} from "../../parser/JavaScriptParser";
 
 export default class Home extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ export default class Home extends Component {
         this.state = {
             asd: null
         };
+        this.jsParser = new JavaScriptParser();
     }
 
     async componentDidMount() {
@@ -47,6 +49,7 @@ export default class Home extends Component {
 
 
     render() {
+        let c = this.jsParser.parse("1+1");
         return (
             <div className="app">
                 <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
@@ -54,7 +57,9 @@ export default class Home extends Component {
                         <div id="editor"></div>
                     </div>
                     <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
-                        Column
+                        <pre>
+                            {JSON.stringify(c, null, 2)}
+                        </pre>
                     </div>
                 </div>
             </div>
