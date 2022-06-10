@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {EditorState} from "@codemirror/state"
+import {EditorState, Facet} from "@codemirror/state"
 import {EditorView} from "codemirror"
 import {defaultKeymap} from "@codemirror/commands"
 import {
@@ -8,7 +8,7 @@ import {
     highlightActiveLine, highlightSpecialChars,
     keymap,
     lineNumbers,
-    placeholder
+    placeholder, ViewPlugin, ViewUpdate
 } from "@codemirror/view";
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
 
@@ -16,15 +16,35 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            asd: null
+            json: {}
         };
         this.jsParser = new JavaScriptParser();
+        this.view = null;
     }
 
     async componentDidMount() {
-        this.setState({});
         let startState = EditorState.create({
             extensions: [
+                ViewPlugin.fromClass(class {
+                    constructor(view) {
+                        this.view = view;
+                    }
+
+                    update(update) {
+                        if (update.docChanged) {
+                            try {
+                                let parsed = this.view.home.jsParser.parse(this.view.state.doc.toString());
+                                this.view.home.setState({
+                                    json: parsed
+                                });
+                            } catch (e) {
+                                this.view.home.setState({
+                                    json: {error: 'incorrect input'}
+                                });
+                            }
+                        }
+                    }
+                }),
                 placeholder("// put your code here"),
                 lineNumbers(),
                 dropCursor(),
@@ -40,18 +60,15 @@ export default class Home extends Component {
             ]
         })
 
-        let view = new EditorView({
+        this.view = new EditorView({
             state: startState,
             parent: document.getElementById("editor"),
-            mode: "javascript"
         })
 
-
+        this.view.home = this;
     }
 
-
     render() {
-        let c = this.jsParser.parse("1+1");
         return (
             <div className="app">
                 <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
@@ -60,7 +77,7 @@ export default class Home extends Component {
                     </div>
                     <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
                         <pre>
-                            {JSON.stringify(c, null, 2)}
+                            {JSON.stringify(this.state.json, null, 2)}
                         </pre>
                     </div>
                 </div>
