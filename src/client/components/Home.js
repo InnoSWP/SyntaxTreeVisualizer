@@ -11,6 +11,8 @@ import {
     placeholder, ViewPlugin, ViewUpdate
 } from "@codemirror/view";
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
+import {get_tree} from "../../tree_builder/tree_builder";
+import {Canvas} from "reaflow"
 
 export default class Home extends Component {
     constructor(props) {
@@ -69,6 +71,7 @@ export default class Home extends Component {
     }
 
     render() {
+        let tree = get_tree(this.state.json);
         return (
             <div className="app">
                 <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
@@ -76,9 +79,19 @@ export default class Home extends Component {
                         <div id="editor"></div>
                     </div>
                     <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
-                        <pre>
-                            {JSON.stringify(this.state.json, null, 2)}
-                        </pre>
+                        {/*<pre>*/}
+                        {/*    {JSON.stringify(this.state.json, null, 2)}*/}
+                        {/*</pre>*/}
+
+                        <Canvas
+                            maxWidth={800}
+                            maxHeight={600}
+                            nodes={tree.nodes}
+                            edges={tree.edges}
+                            readonly={true}
+                            animated={false}
+                        />
+
                     </div>
                 </div>
             </div>
