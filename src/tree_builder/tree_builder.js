@@ -37,6 +37,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "IfStatement":
             return build_if_statement(obj, nodes, edges);
 
+        case "ForStatement":
+            return build_for_statement(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -364,6 +367,93 @@ function build_if_statement(obj, nodes, edges)
             });
 
             let sub_result = get_tree(obj.consequent.body[i], nodes, edges);
+            nodes = sub_result.nodes;
+            edges = sub_result.edges;
+        }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+
+function build_for_statement(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "for"
+    });
+    count++;
+
+    if (obj.init != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "init"
+        });
+
+        let sub_result = get_tree(obj.init, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    if (obj.test != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "condition"
+        });
+
+        let sub_result = get_tree(obj.test, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    if (obj.update != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "update"
+        });
+
+        let sub_result = get_tree(obj.update, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    if (obj.body.type === "ExpressionStatement")
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "body"
+        });
+
+        let sub_result = get_tree(obj.body.expression, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+    else
+        for (let i = 0; i < obj.body.body.length; i++)
+        {
+            edges.push({
+                id: root+"->"+count,
+                from: root+"",
+                to: count+"",
+                text: "body"
+            });
+
+            let sub_result = get_tree(obj.body.body[i], nodes, edges);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
