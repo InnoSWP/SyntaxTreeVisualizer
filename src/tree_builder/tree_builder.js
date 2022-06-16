@@ -31,9 +31,30 @@ export function get_tree(obj, nodes=[], edges=[])
         case "CallExpression":
             return build_call_expression(obj, nodes, edges);
 
+        case "MemberExpression":
+            return build_member_expression(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
+}
+
+function get_member_expression_name(member_expression)
+{
+    let name = "";
+    let tmp = member_expression;
+    while (tmp.type === "MemberExpression")
+    {
+        name = name + "." + tmp.property.name;
+        tmp = tmp.object;
+    }
+    if (tmp.type === "Identifier")
+        name = tmp.name + name;
+
+    if (name === "")
+        name = "MemberExpression"
+
+    return name;
 }
 
 function build_default(obj, nodes, edges)
@@ -257,7 +278,7 @@ function build_call_expression(obj, nodes, edges)
 
     nodes.push({
         id: count+"",
-        text: "call " + obj.callee.name
+        text: "call " + get_member_expression_name(obj.callee)
     });
     count++;
 
@@ -274,6 +295,20 @@ function build_call_expression(obj, nodes, edges)
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_member_expression(obj, nodes, edges)
+{
+    nodes.push({
+        id: count+"",
+        text: get_member_expression_name(obj)
+    });
+    count++;
 
     return {
         nodes: nodes,
