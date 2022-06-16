@@ -28,6 +28,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "FunctionDeclaration":
             return build_function_declaration(obj, nodes, edges);
 
+        case "CallExpression":
+            return build_call_expression(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -241,6 +244,36 @@ function build_function_declaration(obj, nodes, edges)
         edges = sub_result.edges;
     }
 
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_call_expression(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "call " + obj.callee.name
+    });
+    count++;
+
+    for (let i = 0; i < obj.arguments.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "arg " + (i + 1)
+        });
+
+        let sub_result = get_tree(obj.arguments[i], nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
