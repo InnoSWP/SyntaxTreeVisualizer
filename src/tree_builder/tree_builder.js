@@ -52,6 +52,9 @@ function build_program(obj, nodes=[], edges=[])
     {
         let child = obj.body[i];
 
+        if (child.type === "EmptyStatement")
+            continue;
+
         edges.push({
             id: root+"->"+count,
             from: root+"",
