@@ -16,6 +16,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "Literal":
             return build_literal(obj, nodes, edges);
 
+        case "Identifier":
+            return build_identifier(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -107,6 +110,20 @@ function build_literal(obj, nodes=[], edges=[])
     nodes.push({
         id: count+"",
         text: (typeof obj.value == "string" ? '"' : "") + obj.value+"" + (typeof obj.value == "string" ? '"' : "")
+    });
+    count++;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_identifier(obj, nodes=[], edges=[])
+{
+    nodes.push({
+        id: count+"",
+        text: obj.name
     });
     count++;
 
