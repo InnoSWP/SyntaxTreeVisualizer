@@ -34,6 +34,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "MemberExpression":
             return build_member_expression(obj, nodes, edges);
 
+        case "IfStatement":
+            return build_if_statement(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -309,6 +312,61 @@ function build_member_expression(obj, nodes, edges)
         text: get_member_expression_name(obj)
     });
     count++;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_if_statement(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "if"
+    });
+    count++;
+
+    edges.push({
+        id: root+"->"+count,
+        from: root+"",
+        to: count+"",
+        text: "condition"
+    });
+
+    let sub_result = get_tree(obj.test, nodes, edges);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    if (obj.consequent.type === "ExpressionStatement")
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "body"
+        });
+
+        let sub_result = get_tree(obj.consequent.expression, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+    else
+        for (let i = 0; i < obj.consequent.body.length; i++)
+        {
+            edges.push({
+                id: root+"->"+count,
+                from: root+"",
+                to: count+"",
+                text: "body"
+            });
+
+            let sub_result = get_tree(obj.consequent.body[i], nodes, edges);
+            nodes = sub_result.nodes;
+            edges = sub_result.edges;
+        }
 
     return {
         nodes: nodes,
