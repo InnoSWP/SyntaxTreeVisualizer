@@ -19,6 +19,12 @@ export function get_tree(obj, nodes=[], edges=[])
         case "Identifier":
             return build_identifier(obj, nodes, edges);
 
+        case "VariableDeclaration":
+            return build_variable_declaration(obj, nodes, edges);
+
+        case "VariableDeclarator":
+            return build_variable_declarator(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -129,6 +135,64 @@ function build_identifier(obj, nodes=[], edges=[])
         text: obj.name
     });
     count++;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_variable_declaration(obj, nodes=[], edges=[])
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: obj.kind
+    });
+    count++;
+
+    for (let i = 0; i < obj.declarations.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
+
+        let sub_result = get_tree(obj.declarations[i], nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_variable_declarator(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: obj.id.name + (obj.init != null ? "=" : "")
+    });
+    count++;
+
+    if (obj.init != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
+
+        let sub_result = get_tree(obj.init, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
