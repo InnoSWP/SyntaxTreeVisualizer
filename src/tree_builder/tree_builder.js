@@ -25,12 +25,15 @@ export function get_tree(obj, nodes=[], edges=[])
         case "VariableDeclarator":
             return build_variable_declarator(obj, nodes, edges);
 
+        case "FunctionDeclaration":
+            return build_function_declaration(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
 }
 
-function build_default(obj, nodes=[], edges=[])
+function build_default(obj, nodes, edges)
 {
     nodes.push({
         id: count+"",
@@ -44,7 +47,7 @@ function build_default(obj, nodes=[], edges=[])
     };
 }
 
-function build_program(obj, nodes=[], edges=[])
+function build_program(obj, nodes, edges)
 {
     let root = count;
 
@@ -64,7 +67,7 @@ function build_program(obj, nodes=[], edges=[])
         edges.push({
             id: root+"->"+count,
             from: root+"",
-            to: count+""
+            to: count+"",
         });
 
         let sub_result = get_tree(child, nodes, edges);
@@ -78,7 +81,7 @@ function build_program(obj, nodes=[], edges=[])
     };
 }
 
-function build_binary_expression(obj, nodes=[], edges=[])
+function build_binary_expression(obj, nodes, edges)
 {
     let root = count;
 
@@ -114,7 +117,7 @@ function build_binary_expression(obj, nodes=[], edges=[])
     };
 }
 
-function build_literal(obj, nodes=[], edges=[])
+function build_literal(obj, nodes, edges)
 {
     nodes.push({
         id: count+"",
@@ -128,7 +131,7 @@ function build_literal(obj, nodes=[], edges=[])
     };
 }
 
-function build_identifier(obj, nodes=[], edges=[])
+function build_identifier(obj, nodes, edges)
 {
     nodes.push({
         id: count+"",
@@ -142,7 +145,7 @@ function build_identifier(obj, nodes=[], edges=[])
     };
 }
 
-function build_variable_declaration(obj, nodes=[], edges=[])
+function build_variable_declaration(obj, nodes, edges)
 {
     let root = count;
 
@@ -193,6 +196,51 @@ function build_variable_declarator(obj, nodes, edges)
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_function_declaration(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "function " + obj.id.name
+    });
+    count++;
+
+    for (let i = 0; i < obj.params.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "arg " + (i+1)
+        });
+
+        let sub_result = get_tree(obj.params[i], nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    for (let i = 0; i < obj.body.body.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "body"
+        });
+
+        let sub_result = get_tree(obj.body.body[i], nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
 
     return {
         nodes: nodes,
