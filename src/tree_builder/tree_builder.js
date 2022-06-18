@@ -46,6 +46,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "WhileStatement":
             return build_while_statement(obj, nodes, edges);
 
+        case "LogicalExpression":
+            return build_logical_expression(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -565,3 +568,41 @@ function build_while_statement(obj, nodes, edges)
         edges: edges
     };
 }
+
+function build_logical_expression(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: obj.operator
+    });
+    count++;
+
+    edges.push({
+        id: root+"->"+count,
+        from: root+"",
+        to: count+""
+    });
+
+    let sub_result = get_tree(obj.left, nodes, edges);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    edges.push({
+        id: root+"->"+count,
+        from: root+"",
+        to: count+""
+    });
+
+    sub_result = get_tree(obj.right, nodes, edges);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+
