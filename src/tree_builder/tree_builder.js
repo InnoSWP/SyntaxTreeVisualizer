@@ -679,15 +679,18 @@ function build_return_statement(obj, nodes, edges)
     });
     count++;
 
-    edges.push({
-        id: root+"->"+count,
-        from: root+"",
-        to: count+""
-    });
+    if (obj.argument != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
 
-    let sub_result = get_tree(obj.argument, nodes, edges);
-    nodes = sub_result.nodes;
-    edges = sub_result.edges;
+        let sub_result = get_tree(obj.argument, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
