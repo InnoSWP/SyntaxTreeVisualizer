@@ -52,6 +52,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "ReturnStatement":
             return build_return_statement(obj, nodes, edges);
 
+        case "AssignmentExpression":
+            return build_assignment_expression(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -685,6 +688,63 @@ function build_return_statement(obj, nodes, edges)
     let sub_result = get_tree(obj.argument, nodes, edges);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_assignment_expression(obj, nodes, edges)
+{
+    let root = count;
+
+    if (obj.left.type === "Identifier")
+    {
+        nodes.push({
+            id: count+"",
+            text: obj.left.name + obj.operator
+        });
+        count++;
+
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
+
+        let sub_result = get_tree(obj.right, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+    else
+    {
+        nodes.push({
+            id: count+"",
+            text: obj.operator
+        });
+        count++;
+
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
+
+        let sub_result = get_tree(obj.left, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+""
+        });
+
+        sub_result = get_tree(obj.right, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
