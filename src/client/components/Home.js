@@ -12,7 +12,7 @@ import {
 } from "@codemirror/view";
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
 import {get_tree} from "../../tree_builder/tree_builder";
-import {Canvas} from "reaflow"
+import {Canvas, Edge, Label, Node, Port} from "reaflow"
 
 export default class Home extends Component {
     constructor(props) {
@@ -84,12 +84,42 @@ export default class Home extends Component {
                         {/*</pre>*/}
 
                         <Canvas
+                            layoutOptions={{
+                                // 'elk.nodeLabels.placement': 'INSIDE V_CENTER H_RIGHT',
+                                'elk.algorithm': 'org.eclipse.elk.layered',
+                                // 'elk.direction': 'DOWN',
+                                // nodeLayering: 'INTERACTIVE',
+                                // 'org.eclipse.elk.edgeRouting': 'ORTHOGONAL',
+                                // 'elk.layered.unnecessaryBendpoints': 'true',
+                                'elk.layered.spacing.edgeNodeBetweenLayers': '20',
+                                // 'org.eclipse.elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
+                                // 'org.eclipse.elk.layered.cycleBreaking.strategy': 'DEPTH_FIRST',
+                                // 'org.eclipse.elk.insideSelfLoops.activate': 'true',
+                                "elk.core.zoomToFit": 'true',
+                                // separateConnectedComponents: 'false',
+                                'spacing.nodeNodeBetweenLayers': '20'
+                            }}
                             maxWidth={800}
-                            maxHeight={600}
+                            maxHeight={650}
+                            maxZoom={0.7}
+                            minZoom={-0.7}
                             nodes={tree.nodes}
                             edges={tree.edges}
                             readonly={true}
                             animated={false}
+                            fit={true}
+                            node={<Node
+                                style={{fill: "white"}}
+                                label={<Label
+                                    style={{fill: "black"}}
+
+                                />}
+                            />}
+                            edge={<Edge
+                                label={<Label
+                                    style={{fill: "black"}}
+                                />}
+                            />}
                         />
 
                     </div>
