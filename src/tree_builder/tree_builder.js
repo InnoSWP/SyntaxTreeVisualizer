@@ -40,6 +40,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "ForStatement":
             return build_for_statement(obj, nodes, edges);
 
+        case "UpdateExpression":
+            return build_update_expression(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -457,6 +460,47 @@ function build_for_statement(obj, nodes, edges)
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_update_expression(obj, nodes, edges)
+{
+    let root = count;
+
+    if (obj.argument.type === "Identifier")
+    {
+        nodes.push({
+            id: count+"",
+            text: (obj.prefix ? obj.operator : "") +
+                obj.argument.name +
+                (!obj.prefix ? obj.operator : "")
+        });
+        count++;
+    }
+    else
+    {
+        nodes.push({
+            id: count+"",
+            text: (obj.prefix ? obj.operator : "") +
+                "..." +
+                (!obj.prefix ? obj.operator : "")
+        });
+        count++;
+
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+        });
+
+        let sub_result = get_tree(obj.argument, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
