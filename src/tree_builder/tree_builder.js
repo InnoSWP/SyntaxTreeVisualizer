@@ -334,6 +334,51 @@ function build_member_expression(obj, nodes, edges)
     };
 }
 
+function build_else_block(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "else"
+    });
+    count++;
+
+    if (obj.type === "ExpressionStatement")
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+        });
+
+        let sub_result = get_tree(obj.expression, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+    else
+        for (let i = 0; i < obj.body.length; i++)
+        {
+            edges.push({
+                id: root+"->"+count,
+                from: root+"",
+                to: count+"",
+                text: "body"
+            });
+
+            let sub_result = get_tree(obj.body[i], nodes, edges);
+            nodes = sub_result.nodes;
+            edges = sub_result.edges;
+        }
+
+
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
 function build_if_statement(obj, nodes, edges)
 {
     let root = count;
@@ -382,6 +427,19 @@ function build_if_statement(obj, nodes, edges)
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
+
+    if (obj.alternate != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+        });
+
+        let sub_result = build_else_block(obj.alternate, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
