@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {EditorState, Facet} from "@codemirror/state"
-import {EditorView} from "codemirror"
+import {basicSetup, EditorView} from "codemirror"
 import {defaultKeymap} from "@codemirror/commands"
 import {
     drawSelection,
@@ -8,8 +8,9 @@ import {
     highlightActiveLine, highlightSpecialChars,
     keymap,
     lineNumbers,
-    placeholder, ViewPlugin, ViewUpdate
+    placeholder, ViewPlugin
 } from "@codemirror/view";
+import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
 import {get_tree} from "../../tree_builder/tree_builder";
 import {Canvas, Edge, Label, Node, Port} from "reaflow"
@@ -27,6 +28,8 @@ export default class Home extends Component {
     async componentDidMount() {
         let startState = EditorState.create({
             extensions: [
+                basicSetup,
+                javascript(),
                 ViewPlugin.fromClass(class {
                     constructor(view) {
                         this.view = view;
