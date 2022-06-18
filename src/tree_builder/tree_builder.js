@@ -43,6 +43,9 @@ export function get_tree(obj, nodes=[], edges=[])
         case "UpdateExpression":
             return build_update_expression(obj, nodes, edges);
 
+        case "WhileStatement":
+            return build_while_statement(obj, nodes, edges);
+
         default:
             return build_default(obj, nodes, edges);
     }
@@ -501,6 +504,61 @@ function build_update_expression(obj, nodes, edges)
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_while_statement(obj, nodes, edges)
+{
+    let root = count;
+
+    nodes.push({
+        id: count+"",
+        text: "while"
+    });
+    count++;
+
+    edges.push({
+        id: root+"->"+count,
+        from: root+"",
+        to: count+"",
+        text: "condition"
+    });
+
+    let sub_result = get_tree(obj.test, nodes, edges);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    if (obj.body.type === "ExpressionStatement")
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "body"
+        });
+
+        let sub_result = get_tree(obj.body.expression, nodes, edges);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+    else
+        for (let i = 0; i < obj.body.body.length; i++)
+        {
+            edges.push({
+                id: root+"->"+count,
+                from: root+"",
+                to: count+"",
+                text: "body"
+            });
+
+            let sub_result = get_tree(obj.body.body[i], nodes, edges);
+            nodes = sub_result.nodes;
+            edges = sub_result.edges;
+        }
 
     return {
         nodes: nodes,
