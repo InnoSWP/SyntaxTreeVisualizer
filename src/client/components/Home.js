@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {EditorState, Facet} from "@codemirror/state"
-import {EditorView} from "codemirror"
+import {basicSetup, EditorView} from "codemirror"
 import {defaultKeymap} from "@codemirror/commands"
 import {
     drawSelection,
@@ -8,9 +8,12 @@ import {
     highlightActiveLine, highlightSpecialChars,
     keymap,
     lineNumbers,
-    placeholder, ViewPlugin, ViewUpdate
+    placeholder, ViewPlugin
 } from "@codemirror/view";
+import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
+import {get_tree} from "../../tree_builder/tree_builder";
+import {Canvas, Edge, Label, Node, Port} from "reaflow"
 
 export default class Home extends Component {
     constructor(props) {
@@ -25,6 +28,8 @@ export default class Home extends Component {
     async componentDidMount() {
         let startState = EditorState.create({
             extensions: [
+                basicSetup,
+                javascript(),
                 ViewPlugin.fromClass(class {
                     constructor(view) {
                         this.view = view;
@@ -69,6 +74,7 @@ export default class Home extends Component {
     }
 
     render() {
+        let tree = get_tree(this.state.json);
         return (
             <div className="app">
                 <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
@@ -76,9 +82,49 @@ export default class Home extends Component {
                         <div id="editor"></div>
                     </div>
                     <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
-                        <pre>
-                            {JSON.stringify(this.state.json, null, 2)}
-                        </pre>
+                        {/*<pre>*/}
+                        {/*    {JSON.stringify(this.state.json, null, 2)}*/}
+                        {/*</pre>*/}
+
+                        <Canvas
+                            layoutOptions={{
+                                // 'elk.nodeLabels.placement': 'INSIDE V_CENTER H_RIGHT',
+                                'elk.algorithm': 'org.eclipse.elk.layered',
+                                // 'elk.direction': 'DOWN',
+                                // nodeLayering: 'INTERACTIVE',
+                                // 'org.eclipse.elk.edgeRouting': 'ORTHOGONAL',
+                                // 'elk.layered.unnecessaryBendpoints': 'true',
+                                'elk.layered.spacing.edgeNodeBetweenLayers': '20',
+                                // 'org.eclipse.elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
+                                // 'org.eclipse.elk.layered.cycleBreaking.strategy': 'DEPTH_FIRST',
+                                // 'org.eclipse.elk.insideSelfLoops.activate': 'true',
+                                "elk.core.zoomToFit": 'true',
+                                // separateConnectedComponents: 'false',
+                                'spacing.nodeNodeBetweenLayers': '20'
+                            }}
+                            maxWidth={800}
+                            maxHeight={650}
+                            maxZoom={0.7}
+                            minZoom={-0.7}
+                            nodes={tree.nodes}
+                            edges={tree.edges}
+                            readonly={true}
+                            animated={false}
+                            fit={true}
+                            node={<Node
+                                style={{fill: "white"}}
+                                label={<Label
+                                    style={{fill: "black"}}
+
+                                />}
+                            />}
+                            edge={<Edge
+                                label={<Label
+                                    style={{fill: "black"}}
+                                />}
+                            />}
+                        />
+
                     </div>
                 </div>
             </div>
