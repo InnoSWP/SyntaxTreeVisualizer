@@ -102,10 +102,8 @@ function build_program(obj, nodes, edges)
     });
     count++;
 
-    for (let i = 0; i < obj.body.length; i++)
+    for (let child of obj.body)
     {
-        let child = obj.body[i];
-
         if (child.type === "EmptyStatement")
             continue;
 
@@ -200,7 +198,7 @@ function build_variable_declaration(obj, nodes, edges)
     });
     count++;
 
-    for (let i = 0; i < obj.declarations.length; i++)
+    for (let declaration of obj.declarations)
     {
         edges.push({
             id: root+"->"+count,
@@ -208,7 +206,7 @@ function build_variable_declaration(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(obj.declarations[i], nodes, edges);
+        let sub_result = get_tree(declaration, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -272,7 +270,7 @@ function build_function_declaration(obj, nodes, edges)
         edges = sub_result.edges;
     }
 
-    for (let i = 0; i < obj.body.body.length; i++)
+    for (let child of obj.body.body)
     {
         edges.push({
             id: root+"->"+count,
@@ -281,7 +279,7 @@ function build_function_declaration(obj, nodes, edges)
             text: "body"
         });
 
-        let sub_result = get_tree(obj.body.body[i], nodes, edges);
+        let sub_result = get_tree(child, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -303,7 +301,7 @@ function build_call_expression(obj, nodes, edges)
     });
     count++;
 
-    for (let i = 0; i < obj.arguments.length; i++)
+    for (let argument of obj.arguments)
     {
         edges.push({
             id: root+"->"+count,
@@ -312,7 +310,7 @@ function build_call_expression(obj, nodes, edges)
             text: "arg " + (i + 1)
         });
 
-        let sub_result = get_tree(obj.arguments[i], nodes, edges);
+        let sub_result = get_tree(argument, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -360,7 +358,7 @@ function build_else_block(obj, nodes, edges)
         edges = sub_result.edges;
     }
     else
-        for (let i = 0; i < obj.body.length; i++)
+        for (let child of obj.body)
         {
             edges.push({
                 id: root+"->"+count,
@@ -369,7 +367,7 @@ function build_else_block(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(obj.body[i], nodes, edges);
+            let sub_result = get_tree(child, nodes, edges);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -412,12 +410,12 @@ function build_if_statement(obj, nodes, edges)
             text: "body"
         });
 
-        let sub_result = get_tree(obj.consequent.expression, nodes, edges);
+        sub_result = get_tree(obj.consequent.expression, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
     else
-        for (let i = 0; i < obj.consequent.body.length; i++)
+        for (let child of obj.consequent.body)
         {
             edges.push({
                 id: root+"->"+count,
@@ -426,7 +424,7 @@ function build_if_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(obj.consequent.body[i], nodes, edges);
+            sub_result = get_tree(child, nodes, edges);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -439,7 +437,7 @@ function build_if_statement(obj, nodes, edges)
             to: count+"",
         });
 
-        let sub_result = build_else_block(obj.alternate, nodes, edges);
+        sub_result = build_else_block(obj.alternate, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -517,7 +515,7 @@ function build_for_statement(obj, nodes, edges)
         edges = sub_result.edges;
     }
     else
-        for (let i = 0; i < obj.body.body.length; i++)
+        for (let child of obj.body.body)
         {
             edges.push({
                 id: root+"->"+count,
@@ -526,7 +524,7 @@ function build_for_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(obj.body.body[i], nodes, edges);
+            let sub_result = get_tree(child, nodes, edges);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -608,12 +606,12 @@ function build_while_statement(obj, nodes, edges)
             text: "body"
         });
 
-        let sub_result = get_tree(obj.body.expression, nodes, edges);
+        sub_result = get_tree(obj.body.expression, nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
     else
-        for (let i = 0; i < obj.body.body.length; i++)
+        for (let child of obj.body.body)
         {
             edges.push({
                 id: root+"->"+count,
@@ -622,7 +620,7 @@ function build_while_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(obj.body.body[i], nodes, edges);
+            sub_result = get_tree(child, nodes, edges);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -635,38 +633,7 @@ function build_while_statement(obj, nodes, edges)
 
 function build_logical_expression(obj, nodes, edges)
 {
-    let root = count;
-
-    nodes.push({
-        id: count+"",
-        text: obj.operator
-    });
-    count++;
-
-    edges.push({
-        id: root+"->"+count,
-        from: root+"",
-        to: count+""
-    });
-
-    let sub_result = get_tree(obj.left, nodes, edges);
-    nodes = sub_result.nodes;
-    edges = sub_result.edges;
-
-    edges.push({
-        id: root+"->"+count,
-        from: root+"",
-        to: count+""
-    });
-
-    sub_result = get_tree(obj.right, nodes, edges);
-    nodes = sub_result.nodes;
-    edges = sub_result.edges;
-
-    return {
-        nodes: nodes,
-        edges: edges
-    };
+    return build_binary_expression(obj, nodes, edges);
 }
 
 function build_return_statement(obj, nodes, edges)
