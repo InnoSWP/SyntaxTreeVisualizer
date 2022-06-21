@@ -301,7 +301,7 @@ function build_call_expression(obj, nodes, edges)
     });
     count++;
 
-    for (let argument of obj.arguments)
+    for (let i = 0; i < obj.arguments.length; i++)
     {
         edges.push({
             id: root+"->"+count,
@@ -310,7 +310,7 @@ function build_call_expression(obj, nodes, edges)
             text: "arg " + (i + 1)
         });
 
-        let sub_result = get_tree(argument, nodes, edges);
+        let sub_result = get_tree(obj.arguments[i], nodes, edges);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
