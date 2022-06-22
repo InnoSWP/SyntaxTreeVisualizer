@@ -1,10 +1,10 @@
 // import {get_tree} from "../tree_builder/tree_builder";
 // import {JavaScriptParser} from "../parser/JavaScriptParser";
-let get_tree = require("../tree_builder/tree_builder").get_tree;
-let JavaScriptParser = require("../parser/JavaScriptParser").JavaScriptParser;
+let tree = require("../tree_builder/tree_builder");
+let parser = require("../parser/JavaScriptParser");
 
 test("Simple test 1+1", () => {
-    expect(get_tree(new JavaScriptParser().parse("1+1"), [], [])).toStrictEqual({
+    expect(tree.get_tree(new parser.JavaScriptParser().parse("1+1"), [], [])).toStrictEqual({
         "edges": [
             {
                 "from": "0",
