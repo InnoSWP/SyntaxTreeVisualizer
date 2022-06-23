@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: npm ci
+    - run: npm run lint
+    - run: npm t
     - name: Get Coverage for badge
       run: |
         SUMMARY="$(npm test -- --coverageReporters='text-summary' | tail -2 | head -1)"
