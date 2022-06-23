@@ -12,10 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install npm
-      run: npm install
     - name: Install react-scripts
-      run: npm install --save react react-dom react-scripts
+      run: npm install --save --global react react-dom react-scripts
     - name: Run tests
       run: react-scripts test --coverage
     - name: SonarCloud Scan
