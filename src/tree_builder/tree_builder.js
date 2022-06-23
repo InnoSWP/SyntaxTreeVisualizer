@@ -1,62 +1,62 @@
 let count = 0;
 
-export function get_tree(obj, nodes=[], edges=[], depth=0)
+export function get_tree(obj, nodes=[], edges=[], depth=-1)
 {
     switch (obj.type)
     {
         case "Program":
-            return build_program(obj, nodes, edges, depth++);
+            return build_program(obj, nodes, edges, depth+1);
 
         case "ExpressionStatement":
-            return get_tree(obj.expression, nodes, edges, depth++);
+            return get_tree(obj.expression, nodes, edges, depth);
 
         case "BinaryExpression":
-            return build_binary_expression(obj, nodes, edges, depth++);
+            return build_binary_expression(obj, nodes, edges, depth+1);
 
         case "Literal":
-            return build_literal(obj, nodes, edges, depth++);
+            return build_literal(obj, nodes, edges, depth+1);
 
         case "Identifier":
-            return build_identifier(obj, nodes, edges, depth++);
+            return build_identifier(obj, nodes, edges, depth+1);
 
         case "VariableDeclaration":
-            return build_variable_declaration(obj, nodes, edges, depth++);
+            return build_variable_declaration(obj, nodes, edges, depth+1);
 
         case "VariableDeclarator":
-            return build_variable_declarator(obj, nodes, edges, depth++);
+            return build_variable_declarator(obj, nodes, edges, depth+1);
 
         case "FunctionDeclaration":
-            return build_function_declaration(obj, nodes, edges, depth++);
+            return build_function_declaration(obj, nodes, edges, depth+1);
 
         case "CallExpression":
-            return build_call_expression(obj, nodes, edges, depth++);
+            return build_call_expression(obj, nodes, edges, depth+1);
 
         case "MemberExpression":
-            return build_member_expression(obj, nodes, edges, depth++);
+            return build_member_expression(obj, nodes, edges, depth+1);
 
         case "IfStatement":
-            return build_if_statement(obj, nodes, edges, depth++);
+            return build_if_statement(obj, nodes, edges, depth+1);
 
         case "ForStatement":
-            return build_for_statement(obj, nodes, edges, depth++);
+            return build_for_statement(obj, nodes, edges, depth+1);
 
         case "UpdateExpression":
-            return build_update_expression(obj, nodes, edges, depth++);
+            return build_update_expression(obj, nodes, edges, depth+1);
 
         case "WhileStatement":
-            return build_while_statement(obj, nodes, edges, depth++);
+            return build_while_statement(obj, nodes, edges, depth+1);
 
         case "LogicalExpression":
-            return build_logical_expression(obj, nodes, edges, depth++);
+            return build_logical_expression(obj, nodes, edges, depth+1);
 
         case "ReturnStatement":
-            return build_return_statement(obj, nodes, edges, depth++);
+            return build_return_statement(obj, nodes, edges, depth+1);
 
         case "AssignmentExpression":
-            return build_assignment_expression(obj, nodes, edges, depth++);
+            return build_assignment_expression(obj, nodes, edges, depth+1);
 
         default:
-            return build_default(obj, nodes, edges, depth++);
+            return build_default(obj, nodes, edges, depth+1);
     }
 }
 
