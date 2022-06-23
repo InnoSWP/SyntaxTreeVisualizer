@@ -12,10 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install modules
-      run: yarn
     - name: Run tests
-      run: yarn jest --coverage
+      run: react-scripts test --coverage
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
