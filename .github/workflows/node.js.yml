@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: npm install
+      run: npm install
     - name: Install react-scripts
       run: npm install --save --global react react-dom react-scripts
     - name: Run tests
