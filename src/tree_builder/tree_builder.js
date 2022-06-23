@@ -1,62 +1,62 @@
 let count = 0;
 
-export function get_tree(obj, nodes=[], edges=[])
+export function get_tree(obj, nodes=[], edges=[], depth=0)
 {
     switch (obj.type)
     {
         case "Program":
-            return build_program(obj, nodes, edges);
+            return build_program(obj, nodes, edges, depth++);
 
         case "ExpressionStatement":
-            return get_tree(obj.expression, nodes, edges);
+            return get_tree(obj.expression, nodes, edges, depth++);
 
         case "BinaryExpression":
-            return build_binary_expression(obj, nodes, edges);
+            return build_binary_expression(obj, nodes, edges, depth++);
 
         case "Literal":
-            return build_literal(obj, nodes, edges);
+            return build_literal(obj, nodes, edges, depth++);
 
         case "Identifier":
-            return build_identifier(obj, nodes, edges);
+            return build_identifier(obj, nodes, edges, depth++);
 
         case "VariableDeclaration":
-            return build_variable_declaration(obj, nodes, edges);
+            return build_variable_declaration(obj, nodes, edges, depth++);
 
         case "VariableDeclarator":
-            return build_variable_declarator(obj, nodes, edges);
+            return build_variable_declarator(obj, nodes, edges, depth++);
 
         case "FunctionDeclaration":
-            return build_function_declaration(obj, nodes, edges);
+            return build_function_declaration(obj, nodes, edges, depth++);
 
         case "CallExpression":
-            return build_call_expression(obj, nodes, edges);
+            return build_call_expression(obj, nodes, edges, depth++);
 
         case "MemberExpression":
-            return build_member_expression(obj, nodes, edges);
+            return build_member_expression(obj, nodes, edges, depth++);
 
         case "IfStatement":
-            return build_if_statement(obj, nodes, edges);
+            return build_if_statement(obj, nodes, edges, depth++);
 
         case "ForStatement":
-            return build_for_statement(obj, nodes, edges);
+            return build_for_statement(obj, nodes, edges, depth++);
 
         case "UpdateExpression":
-            return build_update_expression(obj, nodes, edges);
+            return build_update_expression(obj, nodes, edges, depth++);
 
         case "WhileStatement":
-            return build_while_statement(obj, nodes, edges);
+            return build_while_statement(obj, nodes, edges, depth++);
 
         case "LogicalExpression":
-            return build_logical_expression(obj, nodes, edges);
+            return build_logical_expression(obj, nodes, edges, depth++);
 
         case "ReturnStatement":
-            return build_return_statement(obj, nodes, edges);
+            return build_return_statement(obj, nodes, edges, depth++);
 
         case "AssignmentExpression":
-            return build_assignment_expression(obj, nodes, edges);
+            return build_assignment_expression(obj, nodes, edges, depth++);
 
         default:
-            return build_default(obj, nodes, edges);
+            return build_default(obj, nodes, edges, depth++);
     }
 }
 
@@ -78,13 +78,20 @@ function get_member_expression_name(member_expression)
     return name;
 }
 
-function build_default(obj, nodes, edges)
+function create_node(obj, text, depth)
 {
-    nodes.push({
-        id: count+"",
-        text: obj.type
-    });
-    count++;
+    return {
+        id: count+++"",
+        text: text,
+        depth: depth,
+        start: obj.start,
+        end: obj.end
+    };
+}
+
+function build_default(obj, nodes, edges, depth)
+{
+    nodes.push(create_node(obj, obj.type, depth));
 
     return {
         nodes: nodes,
@@ -92,15 +99,11 @@ function build_default(obj, nodes, edges)
     };
 }
 
-function build_program(obj, nodes, edges)
+function build_program(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "Program"
-    });
-    count++;
+    nodes.push(create_node(obj, "Program", depth));
 
     for (let child of obj.body)
     {
@@ -113,7 +116,7 @@ function build_program(obj, nodes, edges)
             to: count+"",
         });
 
-        let sub_result = get_tree(child, nodes, edges);
+        let sub_result = get_tree(child, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -124,15 +127,11 @@ function build_program(obj, nodes, edges)
     };
 }
 
-function build_binary_expression(obj, nodes, edges)
+function build_binary_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: obj.operator
-    });
-    count++;
+    nodes.push(create_node(obj, obj.operator, depth));
 
     edges.push({
         id: root+"->"+count,
@@ -140,7 +139,7 @@ function build_binary_expression(obj, nodes, edges)
         to: count+""
     });
 
-    let sub_result = get_tree(obj.left, nodes, edges);
+    let sub_result = get_tree(obj.left, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -150,7 +149,7 @@ function build_binary_expression(obj, nodes, edges)
         to: count+""
     });
 
-    sub_result = get_tree(obj.right, nodes, edges);
+    sub_result = get_tree(obj.right, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -160,13 +159,9 @@ function build_binary_expression(obj, nodes, edges)
     };
 }
 
-function build_literal(obj, nodes, edges)
+function build_literal(obj, nodes, edges, depth)
 {
-    nodes.push({
-        id: count+"",
-        text: (typeof obj.value == "string" ? '"' : "") + obj.value+"" + (typeof obj.value == "string" ? '"' : "")
-    });
-    count++;
+    nodes.push(create_node(obj, (typeof obj.value == "string" ? '"' : "") + obj.value+"" + (typeof obj.value == "string" ? '"' : ""), depth));
 
     return {
         nodes: nodes,
@@ -174,13 +169,9 @@ function build_literal(obj, nodes, edges)
     };
 }
 
-function build_identifier(obj, nodes, edges)
+function build_identifier(obj, nodes, edges, depth)
 {
-    nodes.push({
-        id: count+"",
-        text: obj.name
-    });
-    count++;
+    nodes.push(create_node(obj, obj.name, depth));
 
     return {
         nodes: nodes,
@@ -188,15 +179,11 @@ function build_identifier(obj, nodes, edges)
     };
 }
 
-function build_variable_declaration(obj, nodes, edges)
+function build_variable_declaration(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: obj.kind
-    });
-    count++;
+    nodes.push(create_node(obj, obj.kind, depth));
 
     for (let declaration of obj.declarations)
     {
@@ -206,7 +193,7 @@ function build_variable_declaration(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(declaration, nodes, edges);
+        let sub_result = get_tree(declaration, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -217,15 +204,11 @@ function build_variable_declaration(obj, nodes, edges)
     };
 }
 
-function build_variable_declarator(obj, nodes, edges)
+function build_variable_declarator(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: obj.id.name + (obj.init != null ? "=" : "")
-    });
-    count++;
+    nodes.push(create_node(obj, obj.id.name + (obj.init != null ? "=" : ""), depth));
 
     if (obj.init != null)
     {
@@ -235,7 +218,7 @@ function build_variable_declarator(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(obj.init, nodes, edges);
+        let sub_result = get_tree(obj.init, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -246,15 +229,11 @@ function build_variable_declarator(obj, nodes, edges)
     };
 }
 
-function build_function_declaration(obj, nodes, edges)
+function build_function_declaration(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "function " + obj.id.name
-    });
-    count++;
+    nodes.push(create_node(obj, "function " + obj.id.name, depth));
 
     for (let i = 0; i < obj.params.length; i++)
     {
@@ -265,7 +244,7 @@ function build_function_declaration(obj, nodes, edges)
             text: "arg " + (i+1)
         });
 
-        let sub_result = get_tree(obj.params[i], nodes, edges);
+        let sub_result = get_tree(obj.params[i], nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -279,7 +258,7 @@ function build_function_declaration(obj, nodes, edges)
             text: "body"
         });
 
-        let sub_result = get_tree(child, nodes, edges);
+        let sub_result = get_tree(child, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -291,15 +270,11 @@ function build_function_declaration(obj, nodes, edges)
     };
 }
 
-function build_call_expression(obj, nodes, edges)
+function build_call_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "call " + get_member_expression_name(obj.callee)
-    });
-    count++;
+    nodes.push(create_node(obj, "call " + get_member_expression_name(obj.callee), depth));
 
     for (let i = 0; i < obj.arguments.length; i++)
     {
@@ -310,7 +285,7 @@ function build_call_expression(obj, nodes, edges)
             text: "arg " + (i + 1)
         });
 
-        let sub_result = get_tree(obj.arguments[i], nodes, edges);
+        let sub_result = get_tree(obj.arguments[i], nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -321,13 +296,9 @@ function build_call_expression(obj, nodes, edges)
     };
 }
 
-function build_member_expression(obj, nodes, edges)
+function build_member_expression(obj, nodes, edges, depth)
 {
-    nodes.push({
-        id: count+"",
-        text: get_member_expression_name(obj)
-    });
-    count++;
+    nodes.push(create_node(obj, get_member_expression_name(obj), depth));
 
     return {
         nodes: nodes,
@@ -335,15 +306,11 @@ function build_member_expression(obj, nodes, edges)
     };
 }
 
-function build_else_block(obj, nodes, edges)
+function build_else_block(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "else"
-    });
-    count++;
+    nodes.push(create_node(obj, "else", depth));
 
     if (obj.type === "ExpressionStatement")
     {
@@ -353,7 +320,7 @@ function build_else_block(obj, nodes, edges)
             to: count+"",
         });
 
-        let sub_result = get_tree(obj.expression, nodes, edges);
+        let sub_result = get_tree(obj.expression, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -367,7 +334,7 @@ function build_else_block(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(child, nodes, edges);
+            let sub_result = get_tree(child, nodes, edges, depth);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -380,15 +347,11 @@ function build_else_block(obj, nodes, edges)
     };
 }
 
-function build_if_statement(obj, nodes, edges)
+function build_if_statement(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "if"
-    });
-    count++;
+    nodes.push(create_node(obj, "if", depth));
 
     edges.push({
         id: root+"->"+count,
@@ -397,7 +360,7 @@ function build_if_statement(obj, nodes, edges)
         text: "condition"
     });
 
-    let sub_result = get_tree(obj.test, nodes, edges);
+    let sub_result = get_tree(obj.test, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -410,7 +373,7 @@ function build_if_statement(obj, nodes, edges)
             text: "body"
         });
 
-        sub_result = get_tree(obj.consequent.expression, nodes, edges);
+        sub_result = get_tree(obj.consequent.expression, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -424,7 +387,7 @@ function build_if_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            sub_result = get_tree(child, nodes, edges);
+            sub_result = get_tree(child, nodes, edges, depth);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -449,15 +412,11 @@ function build_if_statement(obj, nodes, edges)
 }
 
 
-function build_for_statement(obj, nodes, edges)
+function build_for_statement(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "for"
-    });
-    count++;
+    nodes.push(create_node(obj, "for", depth));
 
     if (obj.init != null)
     {
@@ -468,7 +427,7 @@ function build_for_statement(obj, nodes, edges)
             text: "init"
         });
 
-        let sub_result = get_tree(obj.init, nodes, edges);
+        let sub_result = get_tree(obj.init, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -482,7 +441,7 @@ function build_for_statement(obj, nodes, edges)
             text: "condition"
         });
 
-        let sub_result = get_tree(obj.test, nodes, edges);
+        let sub_result = get_tree(obj.test, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -496,7 +455,7 @@ function build_for_statement(obj, nodes, edges)
             text: "update"
         });
 
-        let sub_result = get_tree(obj.update, nodes, edges);
+        let sub_result = get_tree(obj.update, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -510,7 +469,7 @@ function build_for_statement(obj, nodes, edges)
             text: "body"
         });
 
-        let sub_result = get_tree(obj.body.expression, nodes, edges);
+        let sub_result = get_tree(obj.body.expression, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -524,7 +483,7 @@ function build_for_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            let sub_result = get_tree(child, nodes, edges);
+            let sub_result = get_tree(child, nodes, edges, depth);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -535,29 +494,25 @@ function build_for_statement(obj, nodes, edges)
     };
 }
 
-function build_update_expression(obj, nodes, edges)
+function build_update_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
     if (obj.argument.type === "Identifier")
     {
-        nodes.push({
-            id: count+"",
-            text: (obj.prefix ? obj.operator : "") +
-                obj.argument.name +
-                (!obj.prefix ? obj.operator : "")
-        });
-        count++;
+        nodes.push(create_node(obj,
+            (obj.prefix ? obj.operator : "") +
+            obj.argument.name +
+            (!obj.prefix ? obj.operator : ""),
+            depth));
     }
     else
     {
-        nodes.push({
-            id: count+"",
-            text: (obj.prefix ? obj.operator : "") +
-                "..." +
-                (!obj.prefix ? obj.operator : "")
-        });
-        count++;
+        nodes.push(create_node(obj,
+            (obj.prefix ? obj.operator : "") +
+            "..." +
+            (!obj.prefix ? obj.operator : ""),
+            depth));
 
         edges.push({
             id: root+"->"+count,
@@ -565,7 +520,7 @@ function build_update_expression(obj, nodes, edges)
             to: count+"",
         });
 
-        let sub_result = get_tree(obj.argument, nodes, edges);
+        let sub_result = get_tree(obj.argument, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -576,15 +531,11 @@ function build_update_expression(obj, nodes, edges)
     };
 }
 
-function build_while_statement(obj, nodes, edges)
+function build_while_statement(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "while"
-    });
-    count++;
+    nodes.push(create_node(obj, "while", depth));
 
     edges.push({
         id: root+"->"+count,
@@ -593,7 +544,7 @@ function build_while_statement(obj, nodes, edges)
         text: "condition"
     });
 
-    let sub_result = get_tree(obj.test, nodes, edges);
+    let sub_result = get_tree(obj.test, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -606,7 +557,7 @@ function build_while_statement(obj, nodes, edges)
             text: "body"
         });
 
-        sub_result = get_tree(obj.body.expression, nodes, edges);
+        sub_result = get_tree(obj.body.expression, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -620,7 +571,7 @@ function build_while_statement(obj, nodes, edges)
                 text: "body"
             });
 
-            sub_result = get_tree(child, nodes, edges);
+            sub_result = get_tree(child, nodes, edges, depth);
             nodes = sub_result.nodes;
             edges = sub_result.edges;
         }
@@ -631,20 +582,16 @@ function build_while_statement(obj, nodes, edges)
     };
 }
 
-function build_logical_expression(obj, nodes, edges)
+function build_logical_expression(obj, nodes, edges, depth)
 {
-    return build_binary_expression(obj, nodes, edges);
+    return build_binary_expression(obj, nodes, edges, depth);
 }
 
-function build_return_statement(obj, nodes, edges)
+function build_return_statement(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push({
-        id: count+"",
-        text: "return"
-    });
-    count++;
+    nodes.push(create_node(obj, "return", depth));
 
     if (obj.argument != null)
     {
@@ -654,7 +601,7 @@ function build_return_statement(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(obj.argument, nodes, edges);
+        let sub_result = get_tree(obj.argument, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -665,17 +612,13 @@ function build_return_statement(obj, nodes, edges)
     };
 }
 
-function build_assignment_expression(obj, nodes, edges)
+function build_assignment_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
     if (obj.left.type === "Identifier")
     {
-        nodes.push({
-            id: count+"",
-            text: obj.left.name + obj.operator
-        });
-        count++;
+        nodes.push(create_node(obj, obj.left.name + obj.operator, depth));
 
         edges.push({
             id: root+"->"+count,
@@ -683,17 +626,13 @@ function build_assignment_expression(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(obj.right, nodes, edges);
+        let sub_result = get_tree(obj.right, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
     else
     {
-        nodes.push({
-            id: count+"",
-            text: obj.operator
-        });
-        count++;
+        nodes.push(create_node(obj, obj.operator, depth));
 
         edges.push({
             id: root+"->"+count,
@@ -701,7 +640,7 @@ function build_assignment_expression(obj, nodes, edges)
             to: count+""
         });
 
-        let sub_result = get_tree(obj.left, nodes, edges);
+        let sub_result = get_tree(obj.left, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
 
@@ -711,7 +650,7 @@ function build_assignment_expression(obj, nodes, edges)
             to: count+""
         });
 
-        sub_result = get_tree(obj.right, nodes, edges);
+        sub_result = get_tree(obj.right, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
