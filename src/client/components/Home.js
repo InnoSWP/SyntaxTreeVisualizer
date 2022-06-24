@@ -15,6 +15,7 @@ import {
 import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
 import {get_tree} from "../../tree_builder/tree_builder";
+import {get_parallel_array} from "../../array_builder/array_builder";
 import {Canvas, Edge, Label, Node} from "reaflow"
 
 export default class Home extends Component {
@@ -77,6 +78,8 @@ export default class Home extends Component {
 
     render() {
         let tree = get_tree(this.state.json);
+        let array = get_parallel_array(tree);
+        console.log(array);
         return (
             <div className="app">
                 <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
