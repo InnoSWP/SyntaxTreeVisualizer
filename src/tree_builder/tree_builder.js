@@ -614,10 +614,10 @@ function build_return_statement(obj, nodes, edges, depth)
 
 function build_assignment_expression(obj, nodes, edges, depth)
 {
-    let root = count;
-
     if (obj.left.type === "Identifier")
     {
+        let root = count;
+
         nodes.push(create_node(obj, obj.left.name + obj.operator, depth));
 
         edges.push({
@@ -632,27 +632,7 @@ function build_assignment_expression(obj, nodes, edges, depth)
     }
     else
     {
-        nodes.push(create_node(obj, obj.operator, depth));
-
-        edges.push({
-            id: root+"->"+count,
-            from: root+"",
-            to: count+""
-        });
-
-        let sub_result = get_tree(obj.left, nodes, edges, depth);
-        nodes = sub_result.nodes;
-        edges = sub_result.edges;
-
-        edges.push({
-            id: root+"->"+count,
-            from: root+"",
-            to: count+""
-        });
-
-        sub_result = get_tree(obj.right, nodes, edges, depth);
-        nodes = sub_result.nodes;
-        edges = sub_result.edges;
+        return build_binary_expression(obj, nodes, edges, depth);
     }
 
     return {

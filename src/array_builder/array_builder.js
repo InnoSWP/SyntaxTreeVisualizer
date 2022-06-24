@@ -20,10 +20,10 @@ function accumulation(array)
     for (let i = 0; i < array[0].length; i++)
     {
         let addition = 0;
-        for (let j = 0; j < array.length; j++)
+        for (let row of array)
         {
-            array[j][i] += addition;
-            addition = array[j][i];
+            row[i] += addition;
+            addition = row[i];
         }
     }
 }
