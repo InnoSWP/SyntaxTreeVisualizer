@@ -67,7 +67,7 @@ export default class Home extends Component {
                         outline: "0px !important"
                     },
 
-                    "cm-editor": {
+                    "&.cm-editor": {
                       maxHeight: '49vh'
                     }
                 })
@@ -89,7 +89,7 @@ export default class Home extends Component {
         return (
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
-                    <div className="col" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9', overflow: 'auto'}}>
+                    <div className="col p-0" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
                         <div id="editor"></div>
                     </div>
                     <div className="col" style={{height: '50vh', border: '0.3em solid #d9d9d9'}}>
