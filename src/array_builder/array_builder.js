@@ -2,6 +2,9 @@ export function get_parallel_array(tree)
 {
     let array = [];
 
+    if (tree.nodes.length === 0)
+        return array;
+
     let max_depth = 0;
     for (let node of tree.nodes)
         max_depth = node.depth > max_depth ? node.depth : max_depth;
