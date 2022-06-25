@@ -2,6 +2,9 @@ export function get_parallel_array(tree)
 {
     let array = [];
 
+    if (tree.nodes.length === 0)
+        return array;
+
     let max_depth = 0;
     for (let node of tree.nodes)
         max_depth = node.depth > max_depth ? node.depth : max_depth;
@@ -17,7 +20,7 @@ export function get_parallel_array(tree)
 
 function accumulation(array)
 {
-    for (let i = 0; i < array[0].length; i++)
+    for (let i = 1; i < array[0].length; i++)
     {
         let addition = 0;
         for (let row of array)
@@ -30,10 +33,10 @@ function accumulation(array)
 
 function create_row(node, max_depth)
 {
-    let row = [];
+    let row = [node.text];
     for (let i = 0; i < max_depth; i++)
         row.push(0);
-    row[node.depth] = 1;
+    row[node.depth+1] = 1;
 
     return row;
 }

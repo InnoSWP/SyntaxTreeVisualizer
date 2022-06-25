@@ -89,14 +89,22 @@ export default class Home extends Component {
         return (
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
-                    <div className="col p-0" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
+                    <div className="app-item col p-0" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
                         <div id="editor"></div>
                     </div>
-                    <div className="col" style={{height: '50vh', border: '0.3em solid #d9d9d9'}}>
-                        <p>here will be array</p>
+                    <div className="app-item col" style={{height: '50vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
+                        <table className="table table-bordered table-hover">
+                            {array.length === 0 || array[0][0] === undefined ? (
+                                <p></p>
+                            ) : (
+                                array.map((line) => <tr>
+                                    {line.map((cell) => <td>{cell}</td>)}
+                                </tr>)
+                            )}
+                        </table>
                     </div>
                 </div>
-                <div className="row m-0" style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
+                <div className="app-item row m-0" style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
                         <Canvas
                             layoutOptions={{
                                 'elk.algorithm': 'org.eclipse.elk.layered',
@@ -104,8 +112,8 @@ export default class Home extends Component {
                                 "elk.core.zoomToFit": 'true',
                                 'spacing.nodeNodeBetweenLayers': '20'
                             }}
-                            maxWidth={800}
-                            maxHeight={650}
+                            maxWidth={2500}
+                            maxHeight={1600}
                             maxZoom={0.7}
                             minZoom={-0.7}
                             nodes={tree.nodes}
