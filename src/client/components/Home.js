@@ -85,15 +85,18 @@ export default class Home extends Component {
     render() {
         let tree = get_tree(this.state.json);
         let array = get_parallel_array(tree);
-        console.log(array);
         return (
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
                     <div className="col p-0" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
                         <div id="editor"></div>
                     </div>
-                    <div className="col" style={{height: '50vh', border: '0.3em solid #d9d9d9'}}>
-                        <p>here will be array</p>
+                    <div className="col" style={{height: '50vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
+                        <table className="table table-bordered table-hover">
+                            {array.map((line) => <tr>
+                                {line.map((cell) => <td>{cell}</td>)}
+                            </tr>)}
+                        </table>
                     </div>
                 </div>
                 <div className="row m-0" style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
