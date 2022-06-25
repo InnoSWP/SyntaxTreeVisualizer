@@ -10,7 +10,8 @@ import {
     keymap,
     lineNumbers,
     placeholder,
-    ViewPlugin
+    ViewPlugin,
+    scrollPastEnd
 } from "@codemirror/view";
 import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
@@ -59,10 +60,15 @@ export default class Home extends Component {
                 drawSelection(),
                 highlightSpecialChars(),
                 highlightActiveLine(),
+                scrollPastEnd(),
                 keymap.of(defaultKeymap),
                 EditorView.theme({
                     "&.cm-focused": {
                         outline: "0px !important"
+                    },
+
+                    "cm-editor": {
+                      maxHeight: '49vh'
                     }
                 })
             ]
@@ -82,11 +88,15 @@ export default class Home extends Component {
         console.log(array);
         return (
             <div className="app">
-                <div className="row m-0" style={{padding: '30px', boxSizing: 'border-box'}}>
-                    <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
+                <div className="row m-0" style={{boxSizing: 'border-box'}}>
+                    <div className="col" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9', overflow: 'auto'}}>
                         <div id="editor"></div>
                     </div>
-                    <div className="col" style={{minHeight: '90vh', border: '1px solid'}}>
+                    <div className="col" style={{height: '50vh', border: '0.3em solid #d9d9d9'}}>
+                        <p>here will be array</p>
+                    </div>
+                </div>
+                <div className="row m-0" style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
                         <Canvas
                             layoutOptions={{
                                 'elk.algorithm': 'org.eclipse.elk.layered',
@@ -118,7 +128,6 @@ export default class Home extends Component {
                         />
 
                     </div>
-                </div>
             </div>
         );
     }
