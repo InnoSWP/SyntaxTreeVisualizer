@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {EditorState} from "@codemirror/state"
+import {EditorSelection, EditorState} from "@codemirror/state"
 import {basicSetup, EditorView} from "codemirror"
 import {defaultKeymap} from "@codemirror/commands"
 import {
@@ -10,8 +10,8 @@ import {
     keymap,
     lineNumbers,
     placeholder,
-    ViewPlugin,
-    scrollPastEnd
+    scrollPastEnd,
+    ViewPlugin
 } from "@codemirror/view";
 import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
@@ -95,7 +95,6 @@ export default class Home extends Component {
     render() {
         let tree = get_tree(this.state.json);
         let array = get_parallel_array(tree);
-        console.log(array);
         return (
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
@@ -109,7 +108,14 @@ export default class Home extends Component {
                             {array.length === 0 || array[0][0] === undefined ? (
                                 <p></p>
                             ) : (
-                                array.map((line) => <tr>
+                                array.map((line, index) => <tr
+                                    onMouseEnter={() => {
+                                        console.log(tree.nodes[index].start)
+                                        this.view.dispatch({
+                                            selection: EditorSelection.single(tree.nodes[index].start, tree.nodes[index].end)
+                                        })
+                                    }}
+                                >
                                     {line.map((cell) => <td>{cell}</td>)}
                                 </tr>)
                             )}
@@ -135,12 +141,17 @@ export default class Home extends Component {
                         animated={false}
                         fit={true}
                         arrow={null}
-                        node={<Node
-                            style={{fill: "white" }}
+                        node={(node) => <Node
+                            style={{fill: "white"}}
                             label={<Label
                                 style={{fill: "black"}}
-
                             />}
+                            onEnter={() => {
+                                console.log(tree.nodes[node.id].start)
+                                this.view.dispatch({
+                                    selection: EditorSelection.single(tree.nodes[node.id].start, tree.nodes[node.id].end)
+                                })
+                            }}
                         />}
                         edge={<Edge
                             label={<Label
