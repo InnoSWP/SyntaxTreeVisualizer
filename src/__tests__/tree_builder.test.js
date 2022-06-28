@@ -2,7 +2,7 @@ import {get_tree} from "../tree_builder/tree_builder";
 import {JavaScriptParser} from "../parser/JavaScriptParser"
 
 test("Simple test 1+1", () => {
-    expect(get_tree(new JavaScriptParser().parse("1+1"), [], [])).toStrictEqual({
+    expect(get_tree(new JavaScriptParser().parse("1+1"), [], [])).toMatchObject({
         "edges": [
             {
                 "from": "0",
@@ -17,7 +17,7 @@ test("Simple test 1+1", () => {
             {
                 "from": "1",
                 "id": "1->3",
-                "to": "3"
+                "to": "3",
             }
         ],
         "nodes": [
@@ -67,7 +67,7 @@ test("Factorial function test", () => {
         "let n = 4;\n" +
         "answer = factorial(n)\n" +
         "console.log(\"The factorial of \" + n + \" is \" + answer);"
-    ), [], [])).toStrictEqual({
+    ), [], [])).toMatchObject({
         "edges": [
             {
                 "from": "0",
@@ -512,7 +512,7 @@ test("For loop test", () => {
         "}\n" +
         "\n" +
         "console.log('sum:',sum);"
-    ), [], [])).toStrictEqual({
+    ), [], [])).toMatchObject({
         "edges": [
             {
                 "from": "0",
@@ -771,7 +771,7 @@ test("While loop test", () => {
         "    else\n" +
         "      break;\n" +
         "  }"
-    ), [], [])).toStrictEqual({
+    ), [], [])).toMatchObject({
         "edges": [
             {
                 "from": "0",
@@ -984,7 +984,7 @@ test("Simple loops and update expression test", () => {
         "  console.log(i++);\n" +
         "\n" +
         "test.value++;"
-    ), [], [])).toStrictEqual({
+    ), [], [])).toMatchObject({
         "edges": [
             {
                 "from": "0",
@@ -1253,7 +1253,8 @@ test("Simple loops and update expression test", () => {
                 "end": 104,
                 "id": "21",
                 "start": 94,
-                "text": "test.value"
+                "text": "test.value",
+                "height": 25
             }
         ]
     });
