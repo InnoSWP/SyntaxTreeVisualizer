@@ -1,3 +1,5 @@
+import {EditorSelection} from "@codemirror/state";
+
 let count = 0;
 
 export function get_tree(obj, nodes=[], edges=[], depth=-1)
@@ -88,7 +90,7 @@ function create_node(obj, text, depth)
         text: text,
         depth: depth,
         start: obj.start,
-        end: obj.end
+        end: obj.end,
     };
 }
 

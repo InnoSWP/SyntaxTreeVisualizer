@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {EditorState} from "@codemirror/state"
+import {EditorSelection, EditorState} from "@codemirror/state"
 import {basicSetup, EditorView} from "codemirror"
 import {defaultKeymap} from "@codemirror/commands"
 import {
@@ -10,8 +10,8 @@ import {
     keymap,
     lineNumbers,
     placeholder,
-    ViewPlugin,
-    scrollPastEnd
+    scrollPastEnd,
+    ViewPlugin
 } from "@codemirror/view";
 import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
@@ -68,7 +68,7 @@ export default class Home extends Component {
                     },
 
                     "&.cm-editor": {
-                      maxHeight: '49vh'
+                        maxHeight: '49vh'
                     }
                 })
             ]
@@ -85,57 +85,71 @@ export default class Home extends Component {
     render() {
         let tree = get_tree(this.state.json);
         let array = get_parallel_array(tree);
-        console.log(array);
         return (
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
-                    <div className="app-item col p-0" style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
+                    <div className="app-item col p-0"
+                         style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
                         <div id="editor"></div>
                     </div>
-                    <div className="app-item col" style={{height: '50vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
+                    <div className="app-item col"
+                         style={{height: '50vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
                         <table className="table table-bordered table-hover">
                             {array.length === 0 || array[0][0] === undefined ? (
                                 <p></p>
                             ) : (
-                                array.map((line) => <tr>
+                                array.map((line, index) => <tr
+                                    onMouseEnter={() => {
+                                        console.log(tree.nodes[index].start)
+                                        this.view.dispatch({
+                                            selection: EditorSelection.single(tree.nodes[index].start, tree.nodes[index].end)
+                                        })
+                                    }}
+                                >
                                     {line.map((cell) => <td>{cell}</td>)}
                                 </tr>)
                             )}
                         </table>
                     </div>
                 </div>
-                <div className="app-item row m-0" style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
-                        <Canvas
-                            layoutOptions={{
-                                'elk.algorithm': 'org.eclipse.elk.layered',
-                                'elk.layered.spacing.edgeNodeBetweenLayers': '20',
-                                "elk.core.zoomToFit": 'true',
-                                'spacing.nodeNodeBetweenLayers': '20'
+                <div className="app-item row m-0"
+                     style={{boxSizing: 'border-box', height: '50vh', border: '0.3em solid #d9d9d9'}}>
+                    <Canvas
+                        layoutOptions={{
+                            'elk.algorithm': 'org.eclipse.elk.layered',
+                            'elk.layered.spacing.edgeNodeBetweenLayers': '20',
+                            "elk.core.zoomToFit": 'true',
+                            'spacing.nodeNodeBetweenLayers': '20'
+                        }}
+                        maxWidth={2500}
+                        maxHeight={1600}
+                        maxZoom={0.7}
+                        minZoom={-0.7}
+                        nodes={tree.nodes}
+                        edges={tree.edges}
+                        readonly={true}
+                        animated={false}
+                        fit={true}
+                        node={(node) => <Node
+                            style={{fill: "white"}}
+                            label={<Label
+                                style={{fill: "black"}}
+                            />}
+                            onEnter={() => {
+                                console.log(tree.nodes[node.id].start)
+                                this.view.dispatch({
+                                    selection: EditorSelection.single(tree.nodes[node.id].start, tree.nodes[node.id].end)
+                                })
                             }}
-                            maxWidth={2500}
-                            maxHeight={1600}
-                            maxZoom={0.7}
-                            minZoom={-0.7}
-                            nodes={tree.nodes}
-                            edges={tree.edges}
-                            readonly={true}
-                            animated={false}
-                            fit={true}
-                            node={<Node
-                                style={{fill: "white"}}
-                                label={<Label
-                                    style={{fill: "black"}}
-
-                                />}
+                        />}
+                        edge={<Edge
+                            label={<Label
+                                style={{fill: "black"}}
                             />}
-                            edge={<Edge
-                                label={<Label
-                                    style={{fill: "black"}}
-                                />}
-                            />}
-                        />
+                        />}
+                    />
 
-                    </div>
+                </div>
             </div>
         );
     }
