@@ -1,5 +1,3 @@
-import {EditorSelection} from "@codemirror/state";
-
 let count = 0;
 
 export function get_tree(obj, nodes=[], edges=[], depth=-1)
