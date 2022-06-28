@@ -88,7 +88,8 @@ function create_node(obj, text, depth)
         text: text,
         depth: depth,
         start: obj.start,
-        end: obj.end
+        end: obj.end,
+        height: 25
     };
 }
 

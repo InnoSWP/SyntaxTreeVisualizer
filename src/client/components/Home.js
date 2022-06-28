@@ -78,7 +78,7 @@ export default class Home extends Component {
                     },
 
                     "&.cm-editor": {
-                        maxHeight: '49vh'
+                        maxHeight: '43vh'
                     }
                 })
             ]
@@ -100,11 +100,11 @@ export default class Home extends Component {
             <div className="app">
                 <div className="row m-0" style={{boxSizing: 'border-box'}}>
                     <div className="app-item col p-0"
-                         style={{height: '50vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
+                         style={{height: '44vh', maxWidth: '50%', border: '0.3em solid #d9d9d9'}}>
                         <div id="editor"></div>
                     </div>
                     <div className="app-item col"
-                         style={{height: '50vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
+                         style={{height: '44vh', border: '0.3em solid #d9d9d9', fontSize: "1.6rem", overflow: "auto"}}>
                         <table className="table table-bordered table-hover">
                             {array.length === 0 || array[0][0] === undefined ? (
                                 <p></p>
@@ -121,9 +121,9 @@ export default class Home extends Component {
                     <Canvas
                         layoutOptions={{
                             'elk.algorithm': 'org.eclipse.elk.layered',
-                            'elk.layered.spacing.edgeNodeBetweenLayers': '20',
+                            'elk.layered.spacing.edgeNodeBetweenLayers': '5',
                             "elk.core.zoomToFit": 'true',
-                            'spacing.nodeNodeBetweenLayers': '20'
+                            'spacing.nodeNodeBetweenLayers': '10'
                         }}
                         maxWidth={2500}
                         maxHeight={1600}
@@ -134,8 +134,9 @@ export default class Home extends Component {
                         readonly={true}
                         animated={false}
                         fit={true}
+                        arrow={null}
                         node={<Node
-                            style={{fill: "white"}}
+                            style={{fill: "white" }}
                             label={<Label
                                 style={{fill: "black"}}
 
