@@ -15,7 +15,19 @@ export function get_parallel_array(tree)
 
     accumulation(array);
 
+    clear_rows(array, tree.nodes);
+
     return array;
+}
+
+function clear_rows(array, nodes)
+{
+    for (let i = 0; i < nodes.length; i++)
+    {
+        let node = nodes[i];
+        for (let j = node.depth+2; j < array[i].length; j++)
+            array[i][j] = 0;
+    }
 }
 
 function accumulation(array)
