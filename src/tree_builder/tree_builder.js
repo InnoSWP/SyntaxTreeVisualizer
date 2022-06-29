@@ -302,7 +302,7 @@ function build_function_declaration(obj, nodes, edges, depth)
             text: "arg " + (i+1)
         });
 
-        let sub_result = get_tree(obj.params[i], nodes, edges, depth);
+        sub_result = get_tree(obj.params[i], nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -428,7 +428,7 @@ function build_for_statement(obj, nodes, edges, depth)
             text: "init"
         });
 
-        let sub_result = get_tree(obj.init, nodes, edges, depth);
+        sub_result = get_tree(obj.init, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -442,7 +442,7 @@ function build_for_statement(obj, nodes, edges, depth)
             text: "condition"
         });
 
-        let sub_result = get_tree(obj.test, nodes, edges, depth);
+        sub_result = get_tree(obj.test, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -456,7 +456,7 @@ function build_for_statement(obj, nodes, edges, depth)
             text: "update"
         });
 
-        let sub_result = get_tree(obj.update, nodes, edges, depth);
+        sub_result = get_tree(obj.update, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -700,7 +700,7 @@ function build_method_definition(obj, nodes, edges, depth)
             text: "arg " + (i+1)
         });
 
-        let sub_result = get_tree(obj.value.params[i], nodes, edges, depth);
+        sub_result = get_tree(obj.value.params[i], nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
@@ -755,7 +755,7 @@ function build_class_declaration(obj, nodes, edges, depth)
             text: "super"
         });
 
-        let sub_result = get_tree(obj.superClass, nodes, edges, depth);
+        sub_result = get_tree(obj.superClass, nodes, edges, depth);
         nodes = sub_result.nodes;
         edges = sub_result.edges;
     }
