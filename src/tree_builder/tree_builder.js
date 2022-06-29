@@ -61,6 +61,9 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "UnaryExpression":
             return build_unary_expression(obj, nodes, edges, depth+1);
 
+        case "ArrayExpression":
+            return build_array_expression(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -669,6 +672,32 @@ function build_computed_member_expression(obj, nodes, edges, depth)
     let sub_result = get_tree(obj.property, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_array_expression(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, "[" + (obj.elements.length === 0 ? "" : "...") + "]", depth));
+
+    for (let i = 0; i < obj.elements.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "elem" + (i+1)
+        });
+
+        let sub_result = get_tree(obj.elements[i], nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
