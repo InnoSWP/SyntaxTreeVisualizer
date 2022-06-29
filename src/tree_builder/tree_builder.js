@@ -58,6 +58,9 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "AssignmentExpression":
             return build_assignment_expression(obj, nodes, edges, depth+1);
 
+        case "UnaryExpression":
+            return build_unary_expression(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -641,4 +644,9 @@ function build_assignment_expression(obj, nodes, edges, depth)
         nodes: nodes,
         edges: edges
     };
+}
+
+function build_unary_expression(obj, nodes, edges, depth)
+{
+    return build_update_expression(obj, nodes, edges, depth);
 }
