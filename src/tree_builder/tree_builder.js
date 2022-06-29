@@ -305,6 +305,9 @@ function build_call_expression(obj, nodes, edges, depth)
 
 function build_member_expression(obj, nodes, edges, depth)
 {
+    if (obj.computed)
+        return build_computed_member_expression(obj, nodes, edges, depth);
+
     nodes.push(create_node(obj, get_member_expression_name(obj), depth));
 
     return {
@@ -649,4 +652,26 @@ function build_assignment_expression(obj, nodes, edges, depth)
 function build_unary_expression(obj, nodes, edges, depth)
 {
     return build_update_expression(obj, nodes, edges, depth);
+}
+
+function build_computed_member_expression(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, get_member_expression_name(obj.object) + "[...]", depth));
+
+    edges.push({
+        id: root+"->"+count,
+        from: root+"",
+        to: count+""
+    });
+
+    let sub_result = get_tree(obj.property, nodes, edges, depth);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
 }
