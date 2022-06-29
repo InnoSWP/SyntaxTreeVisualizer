@@ -67,6 +67,15 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "ForOfStatement":
             return build_for_of_statement(obj, nodes, edges, depth+1);
 
+        case "ClassDeclaration":
+            return build_class_declaration(obj, nodes, edges, depth+1);
+
+        case "MethodDefinition":
+            return build_method_definition(obj, nodes, edges, depth+1);
+
+        case "PropertyDefinition":
+            return build_property_definition(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -102,16 +111,16 @@ function create_node(obj, text, depth)
     };
 }
 
-function build_loop_body(obj, root, nodes, edges, depth)
+function build_body(obj, root, nodes, edges, depth)
 {
-    if (obj.type === "BlockStatement")
+    if (obj.type === "BlockStatement" || obj.type === "ClassBody")
         for (let child of obj.body)
         {
             edges.push({
                 id: root+"->"+count,
                 from: root+"",
                 to: count+"",
-                text: "body"
+                text: obj.type === "BlockStatement" ? "body" : ""
             });
 
             let sub_result = get_tree(child, nodes, edges, depth);
@@ -298,20 +307,9 @@ function build_function_declaration(obj, nodes, edges, depth)
         edges = sub_result.edges;
     }
 
-    for (let child of obj.body.body)
-    {
-        edges.push({
-            id: root+"->"+count,
-            from: root+"",
-            to: count+"",
-            text: "body"
-        });
-
-        let sub_result = get_tree(child, nodes, edges, depth);
-        nodes = sub_result.nodes;
-        edges = sub_result.edges;
-    }
-
+    let sub_result = build_body(obj.body, root, nodes, edges, depth);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
 
     return {
         nodes: nodes,
@@ -364,8 +362,7 @@ function build_else_block(obj, nodes, edges, depth)
 
     nodes.push(create_node(obj, "else", depth));
 
-    // else body is the same as loop body
-    let sub_result = build_loop_body(obj, root, nodes, edges, depth);
+    let sub_result = build_body(obj, root, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -392,8 +389,7 @@ function build_if_statement(obj, nodes, edges, depth)
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
-    // if body is the same as loop body
-    sub_result = build_loop_body(obj.consequent, root, nodes, edges, depth);
+    sub_result = build_body(obj.consequent, root, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -465,7 +461,7 @@ function build_for_statement(obj, nodes, edges, depth)
         edges = sub_result.edges;
     }
 
-    let sub_result = build_loop_body(obj.body, root, nodes, edges, depth);
+    let sub_result = build_body(obj.body, root, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -529,7 +525,7 @@ function build_while_statement(obj, nodes, edges, depth)
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
-    sub_result = build_loop_body(obj.body, root, nodes, edges, depth);
+    sub_result = build_body(obj.body, root, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
@@ -679,7 +675,92 @@ function build_for_of_statement(obj, nodes, edges, depth)
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
-    sub_result = build_loop_body(obj.body, root, nodes, edges, depth);
+    sub_result = build_body(obj.body, root, nodes, edges, depth);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_method_definition(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, obj.kind + " " + obj.key.name, depth));
+
+    for (let i = 0; i < obj.value.params.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "arg " + (i+1)
+        });
+
+        let sub_result = get_tree(obj.value.params[i], nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    let sub_result = build_body(obj.value.body, root, nodes, edges, depth);
+    nodes = sub_result.nodes;
+    edges = sub_result.edges;
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_property_definition(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, "property " + obj.key.name + (obj.value != null ? "=" : ""), depth));
+
+    if (obj.value != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+        });
+
+        let sub_result = get_tree(obj.value, nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    };
+}
+
+function build_class_declaration(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, "class " + obj.id.name, depth));
+
+    if (obj.superClass != null)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "super"
+        });
+
+        let sub_result = get_tree(obj.superClass, nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    let sub_result = build_body(obj.body, root, nodes, edges, depth);
     nodes = sub_result.nodes;
     edges = sub_result.edges;
 
