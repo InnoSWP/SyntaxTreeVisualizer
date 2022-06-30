@@ -4,7 +4,7 @@
 [SyntaxTreeVisualizer](http://syntax-visualizer.markovav.ru/) is the interactive webpage for visualizing code in forms of _abstract syntax tree_ and _parallel array_.
 
 ## Demo
-[![Watch the video](https://www.youtube.com/watch?v=2q0nueDekkw)
+[![Watch the video](https://www.youtube.com/watch?v=2q0nueDekkw)]
 
 ## How to use?
 
