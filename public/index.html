@@ -20,7 +20,7 @@
             background-color: #d9d9d9;
         }
         .header {
-            font-size: 2.5em;
+            font-size: 2em;
             text-align: center;
             letter-spacing: normal;
             margin-bottom: 0;
@@ -42,7 +42,36 @@
 
 <body>
 
-    <h1 class="header">Syntax Vizualizer</h1>
+    <h1 class="header">Syntax Visualizer
+        <span class="btn btn-dark p-0" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              style="border-radius: 60px; font-size: 0.6em; padding: 0 9px !important;">
+        ?
+    </span>
+    </h1>
+
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">How to use Syntax Visualizer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol>
+                        <li>Enter the code in the “code” block.</li>
+                        <li>The program will automatically build images of the tree and the array.</li>
+                        <li>You can hover on any item of tree or array to see corresponding parts of code.</li>
+                        <li>You can fold constant expressions (yellow nodes in tree) by clicking on them.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
 
