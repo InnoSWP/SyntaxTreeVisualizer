@@ -1,22 +1,36 @@
-# SyntaxTreeVisualizer 
+<h1 align="center">Syntax Tree Visualizer 🌳</h1>
+
+<p align="center">Visualizer for JavaScript code into an <strong>abstract syntax tree</strong> and a <strong>parallel array</strong> representations.<p>
+
+<div align="center">
+
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/markovav-official/626ceaef15ab8d3d6dd2be185454916a/raw/SyntaxTreeVisualizer__heads_main.json)
 
-[SyntaxTreeVisualizer](http://syntax-visualizer.markovav.ru/) is the interactive webpage for visualizing code in forms of _abstract syntax tree_ and _parallel array_.
+[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Features](#features) • [Installation](#installation) • [Technologies used](#techno)
 
-## Demo
+</div>
+
+___
+
+<h2 id="description">Description</h2>
+
+**Syntax Visualizer** is an interactive webpage for vizualizing JavaScript code in forms of abstract syntax tree (AST) and parallel array representations. The page contains three fields: the code editor, the AST representation, and the parallel array representation. When you enter the code, the representations are immediately generated.
+
+<h2 id="demo">Demo</h2>
+
 [![Watch the video](https://img.youtube.com/vi/2q0nueDekkw/maxresdefault.jpg)](https://www.youtube.com/watch?v=2q0nueDekkw)
 
-## How to use?
+<h2 id="instruction">How to use?</h2>
 
-## Features
+<h2 id="features">Features</h2>
+
 - highlighting of similar parts
 - share the result via URL
 
-## Installation
+<h2 id="installation">Installation</h2>
 
-## Frameworks and libraries
+<h2 id="techno">Technologies used</h2>
+
 - Code editor – [CodeMirror](https://github.com/codemirror/codemirror5)
 - Parser – [Acorn](https://github.com/acornjs/acorn)
 - Tree builder – [reaflow](https://github.com/reaviz/reaflow)
-
-## Authors
