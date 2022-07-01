@@ -8,3 +8,11 @@ export function is_const(expr)
 
     return is_const(expr.left) && is_const(expr.right);
 }
+
+export function can_fold(expr)
+{
+    if (expr.type === "Literal")
+        return false;
+
+    return is_const(expr);
+}

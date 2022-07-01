@@ -17,7 +17,7 @@ import {javascript} from "@codemirror/lang-javascript"
 import {JavaScriptParser} from "../../parser/JavaScriptParser";
 import {get_tree} from "../../tree_builder/tree_builder";
 import {get_parallel_array} from "../../array_builder/array_builder";
-import {is_const} from "../../const_exp_folder/const_exp_folder";
+import {is_const, can_fold} from "../../const_exp_folder/const_exp_folder";
 import {Canvas, Edge, Label, Node} from "reaflow"
 
 export default class Home extends Component {
@@ -143,12 +143,12 @@ export default class Home extends Component {
                         fit={true}
                         arrow={null}
                         node={(node) => <Node
+                            className={tree.nodes[node.id] != null && can_fold(tree.nodes[node.id].obj) ? "can-fold" : ""}
                             style={{fill: "white"}}
                             label={<Label
                                 style={{fill: "black"}}
                             />}
                             onEnter={() => {
-                                console.log(tree.nodes[node.id].start)
                                 this.view.dispatch({
                                     selection: EditorSelection.single(tree.nodes[node.id].start, tree.nodes[node.id].end)
                                 })
