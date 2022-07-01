@@ -18,6 +18,7 @@ import {JavaScriptParser} from "../../parser/JavaScriptParser";
 import {get_tree} from "../../tree_builder/tree_builder";
 import {get_parallel_array} from "../../array_builder/array_builder";
 import {Canvas, Edge, Label, Node} from "reaflow"
+import {js_beautify} from 'js-beautify'
 
 export default class Home extends Component {
     constructor(props) {
@@ -72,6 +73,19 @@ export default class Home extends Component {
                 highlightActiveLine(),
                 scrollPastEnd(),
                 keymap.of(defaultKeymap),
+                ((component) => keymap.of([{
+                    key: "Ctrl-Alt-l",
+                    run() {
+                        component.view.dispatch({
+                            changes: {
+                                from: 0,
+                                to: component.view.state.doc.length,
+                                insert: js_beautify(component.view.state.doc.toString(), {indent_size: 2})
+                            }
+                        });
+                        return true;
+                    }
+                }]))(this),
                 EditorView.theme({
                     "&.cm-focused": {
                         outline: "0px !important"
@@ -110,7 +124,6 @@ export default class Home extends Component {
                             ) : (
                                 array.map((line, index) => <tr
                                     onMouseEnter={() => {
-                                        console.log(tree.nodes[index].start)
                                         this.view.dispatch({
                                             selection: EditorSelection.single(tree.nodes[index].start, tree.nodes[index].end)
                                         })
@@ -147,7 +160,6 @@ export default class Home extends Component {
                                 style={{fill: "black"}}
                             />}
                             onEnter={() => {
-                                console.log(tree.nodes[node.id].start)
                                 this.view.dispatch({
                                     selection: EditorSelection.single(tree.nodes[node.id].start, tree.nodes[node.id].end)
                                 })
