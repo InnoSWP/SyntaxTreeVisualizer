@@ -7,7 +7,7 @@
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/markovav-official/626ceaef15ab8d3d6dd2be185454916a/raw/SyntaxTreeVisualizer__heads_main.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Technologies used](#techno)
+[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Try it out](#try) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Technologies used](#techno)
 
 </div>
 
@@ -29,6 +29,10 @@ Follow the [link](http://syntax-visualizer.markovav.ru/) to use the website.
 2. The program will automatically build images of the tree and the array.
 3. You can hover on any item of tree or array to see corresponding parts of code.
 4. You can fold constant expressions (yellow nodes in tree) by clicking on them.
+
+<h2 id="try">Try it out</h2>
+
+[Click here](http://syntax-visualizer.markovav.ru/?code=ZnVuY3Rpb24gZmFjdG9yaWFsKG4pIHsKICBsZXQgYW5zd2VyPTE7CiAgaWYgKG49PTB8fG49PTEpIHsKICAgIHJldHVybiBhbnN3ZXI7CiAgfQogIGVsc2UKICB7CiAgICBmb3IgKHZhciBpPW47aT49MTtpLS0pIHsKICAgICAgYW5zd2VyPWFuc3dlcippOwogICAgfQogICAgcmV0dXJuIGFuc3dlcjsKICB9Cn0KbGV0IG4gPSAxICsgMSArIDEgKyAxOyBhbnN3ZXIgPSBmYWN0b3JpYWwobik7CmNvbnNvbGUubG9nKCJUaGUgIisiZmFjdG9yaWFsICIrIm9mICIrbisiIGlzICIrYW5zd2VyKTs=)
 
 <h2 id="features">Features</h2>
 
