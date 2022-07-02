@@ -76,6 +76,12 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "PropertyDefinition":
             return build_property_definition(obj, nodes, edges, depth+1);
 
+        case "ThisExpression":
+            return build_this_expression(obj, nodes, edges, depth+1);
+
+        case "NewExpression":
+            return build_new_expression(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -92,6 +98,8 @@ function get_member_expression_name(member_expression)
     }
     if (tmp.type === "Identifier")
         name = tmp.name + name;
+    else if (tmp.type === "ThisExpression")
+        name = "this" + name;
 
     if (name === "")
         name = "MemberExpression"
@@ -323,7 +331,8 @@ function build_call_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push(create_node(obj, "call " + get_member_expression_name(obj.callee), depth));
+    let text = "call " + (obj.callee.type === "MemberExpression" || obj.callee.type === "Identifier" ? get_member_expression_name(obj.callee) : obj.callee.type);
+    nodes.push(create_node(obj, text, depth));
 
     for (let i = 0; i < obj.arguments.length; i++)
     {
@@ -692,7 +701,8 @@ function build_method_definition(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push(create_node(obj, obj.kind + " " + obj.key.name, depth));
+    let text = obj.kind + (obj.kind === "method" ? " " + obj.key.name : "");
+    nodes.push(create_node(obj, text, depth));
 
     let sub_result;
     for (let i = 0; i < obj.value.params.length; i++)
@@ -773,4 +783,41 @@ function build_class_declaration(obj, nodes, edges, depth)
         nodes: nodes,
         edges: edges
     };
+}
+
+function build_this_expression(obj, nodes, edges, depth)
+{
+    nodes.push(create_node(obj, "this", depth));
+
+    return {
+        nodes: nodes,
+        edges: edges
+    }
+}
+
+function build_new_expression(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, "new " + obj.callee.name, depth));
+
+    let sub_result;
+    for (let i = 0; i < obj.arguments.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "arg " + (i+1)
+        });
+
+        sub_result = get_tree(obj.arguments[i], nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
+
+    return {
+        nodes: nodes,
+        edges: edges
+    }
 }
