@@ -7,7 +7,7 @@
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/markovav-official/626ceaef15ab8d3d6dd2be185454916a/raw/SyntaxTreeVisualizer__heads_main.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Try it out](#try) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Frameworks used](#frameworks)
+[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Frameworks used](#frameworks)
 
 </div>
 
@@ -30,14 +30,15 @@ Follow the [link](http://syntax-visualizer.markovav.ru/) to use the website.
 3. You can hover on any item of tree or array to see corresponding parts of code.
 4. You can fold constant expressions (yellow nodes in tree) by clicking on them.
 
-<h2 id="try">Try it out</h2>
+<h3>Examples</h3>
 
-[Click here](http://syntax-visualizer.markovav.ru/?code=ZnVuY3Rpb24gZmFjdG9yaWFsKG4pIHsKICBsZXQgYW5zd2VyPTE7CiAgaWYgKG49PTB8fG49PTEpIHsKICAgIHJldHVybiBhbnN3ZXI7CiAgfQogIGVsc2UKICB7CiAgICBmb3IgKHZhciBpPW47aT49MTtpLS0pIHsKICAgICAgYW5zd2VyPWFuc3dlcippOwogICAgfQogICAgcmV0dXJuIGFuc3dlcjsKICB9Cn0KbGV0IG4gPSAxICsgMSArIDEgKyAxOyBhbnN3ZXIgPSBmYWN0b3JpYWwobik7CmNvbnNvbGUubG9nKCJUaGUgIisiZmFjdG9yaWFsICIrIm9mICIrbisiIGlzICIrYW5zd2VyKTs=)
+- [Factorial function](http://syntax-visualizer.markovav.ru/?code=ZnVuY3Rpb24gZmFjdG9yaWFsKG4pIHsKICBsZXQgYW5zd2VyPTE7CiAgaWYgKG49PTB8fG49PTEpIHsKICAgIHJldHVybiBhbnN3ZXI7CiAgfQogIGVsc2UKICB7CiAgICBmb3IgKHZhciBpPW47aT49MTtpLS0pIHsKICAgICAgYW5zd2VyPWFuc3dlcippOwogICAgfQogICAgcmV0dXJuIGFuc3dlcjsKICB9Cn0KbGV0IG4gPSAxICsgMSArIDEgKyAxOyBhbnN3ZXIgPSBmYWN0b3JpYWwobik7CmNvbnNvbGUubG9nKCJUaGUgIisiZmFjdG9yaWFsICIrIm9mICIrbisiIGlzICIrYW5zd2VyKTs=)
 
 <h2 id="features">Features</h2>
 
 - ⏩ Immediate AST and parallel array generation
 - 🛠️ Code editor with syntax highlighting and code refactoring (Ctrl+Alt+L)
+- ↩️ UNDO (Ctrl+Z) and REDO (Ctrl+Y) functionality
 - 💡 Highlighting of similar parts
 - 🔗 Share the result via auto-generated URL
 - 👨‍💻 Folding of constant expressions
