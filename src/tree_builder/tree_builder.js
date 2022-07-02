@@ -79,6 +79,9 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "ThisExpression":
             return build_this_expression(obj, nodes, edges, depth+1);
 
+        case "NewExpression":
+            return build_new_expression(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -785,6 +788,33 @@ function build_class_declaration(obj, nodes, edges, depth)
 function build_this_expression(obj, nodes, edges, depth)
 {
     nodes.push(create_node(obj, "this", depth));
+
+    return {
+        nodes: nodes,
+        edges: edges
+    }
+}
+
+function build_new_expression(obj, nodes, edges, depth)
+{
+    let root = count;
+
+    nodes.push(create_node(obj, "new " + obj.callee.name, depth));
+
+    let sub_result;
+    for (let i = 0; i < obj.arguments.length; i++)
+    {
+        edges.push({
+            id: root+"->"+count,
+            from: root+"",
+            to: count+"",
+            text: "arg " + (i+1)
+        });
+
+        sub_result = get_tree(obj.arguments[i], nodes, edges, depth);
+        nodes = sub_result.nodes;
+        edges = sub_result.edges;
+    }
 
     return {
         nodes: nodes,
