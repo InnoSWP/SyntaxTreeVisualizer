@@ -331,7 +331,7 @@ function build_call_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
-    let text = "call " + (obj.callee.type === "MemberExpression" ? get_member_expression_name(obj.callee) : obj.callee.type);
+    let text = "call " + (obj.callee.type === "MemberExpression" || obj.callee.type === "Identifier" ? get_member_expression_name(obj.callee) : obj.callee.type);
     nodes.push(create_node(obj, text, depth));
 
     for (let i = 0; i < obj.arguments.length; i++)
