@@ -40,6 +40,33 @@ Follow the [link](http://syntax-visualizer.markovav.ru/) to use the website.
 
 <h2 id="installation">Installation</h2>
 
+### Manual installation
+1. Install Node.js by the following link [nodejs.org](https://nodejs.org/)
+2. Clone the repository
+```console
+git clone https://github.com/InnoSWP/SyntaxTreeVisualizer
+```
+3. Open project folder
+4. Install dependencies
+```console
+npm install
+```
+5. Run the project in development mode
+```console
+npm start
+```
+
+### Using Docker
+1. Install Docker on your computer [docker.com](https://www.docker.com/get-started/)
+2. Pull image [markovav/syntax_tree_visualizer:latest](https://hub.docker.com/r/markovav/syntax_tree_visualizer)
+```console
+docker pull markovav/syntax_tree_visualizer
+```
+3. Create a container using this image
+```console
+docker run -p 80:3000 -d --name syntax-tree-visualizer markovav/syntax_tree_visualizer
+```
+
 <h2 id="contribution">Contribution</h2>
 
 To contribute to the project, create a **pull request** with a detailed explanation, written tests, and no SonarCloud alerts.
