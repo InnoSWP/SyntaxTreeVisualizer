@@ -7,7 +7,7 @@
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/markovav-official/626ceaef15ab8d3d6dd2be185454916a/raw/SyntaxTreeVisualizer__heads_main.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Try it out](#try) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Technologies used](#techno)
+[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Try it out](#try) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Frameworks used](#frameworks)
 
 </div>
 
@@ -75,7 +75,7 @@ docker run -p 80:3000 -d --name syntax-tree-visualizer markovav/syntax_tree_visu
 
 To contribute to the project, create a **pull request** with a detailed explanation, written tests, and no SonarCloud alerts.
 
-<h2 id="techno">Technologies used</h2>
+<h2 id="frameworks">Frameworks used</h2>
 
 - Code editor – [CodeMirror](https://github.com/codemirror/codemirror5)
 - Parser – [Acorn](https://github.com/acornjs/acorn)
