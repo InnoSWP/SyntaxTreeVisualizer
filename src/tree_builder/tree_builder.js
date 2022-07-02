@@ -328,7 +328,8 @@ function build_call_expression(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push(create_node(obj, "call " + get_member_expression_name(obj.callee), depth));
+    let text = "call " + (obj.callee.type === "MemberExpression" ? get_member_expression_name(obj.callee) : obj.callee.type);
+    nodes.push(create_node(obj, text, depth));
 
     for (let i = 0; i < obj.arguments.length; i++)
     {
@@ -697,7 +698,8 @@ function build_method_definition(obj, nodes, edges, depth)
 {
     let root = count;
 
-    nodes.push(create_node(obj, obj.kind + " " + obj.key.name, depth));
+    let text = obj.kind + (obj.kind === "method" ? " " + obj.key.name : "");
+    nodes.push(create_node(obj, text, depth));
 
     let sub_result;
     for (let i = 0; i < obj.value.params.length; i++)
