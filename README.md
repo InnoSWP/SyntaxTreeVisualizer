@@ -7,7 +7,7 @@
 ![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/markovav-official/626ceaef15ab8d3d6dd2be185454916a/raw/SyntaxTreeVisualizer__heads_main.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Features](#features) • [Installation](#installation) • [Technologies used](#techno)
+[Description](#description) • [Demo](#demo) • [How to use](#instruction) • [Features](#features) • [Installation](#installation) • [Contribution](#contribution) • [Technologies used](#techno)
 
 </div>
 
@@ -23,12 +23,26 @@ ___
 
 <h2 id="instruction">How to use?</h2>
 
+Follow the [link](http://syntax-visualizer.markovav.ru/) to use the website.
+
+1. Enter the code in the “code” block.
+2. The program will automatically build images of the tree and the array.
+3. You can hover on any item of tree or array to see corresponding parts of code.
+4. You can fold constant expressions (yellow nodes in tree) by clicking on them.
+
 <h2 id="features">Features</h2>
 
-- highlighting of similar parts
-- share the result via URL
+- ⏩ Immediate AST and parallel array generation
+- 🛠️ Code editor with syntax highlighting and code refactoring (Ctrl+Alt+L)
+- 💡 Highlighting of similar parts
+- 🔗 Share the result via auto-generated URL
+- 👨‍💻 Folding of constant expressions
 
 <h2 id="installation">Installation</h2>
+
+<h2 id="contribution">Contribution</h2>
+
+To contribute to the project, create a **pull request** with a detailed explanation, written tests, and no SonarCloud alerts.
 
 <h2 id="techno">Technologies used</h2>
 
