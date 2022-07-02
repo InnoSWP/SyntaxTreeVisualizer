@@ -170,7 +170,13 @@ export default class Home extends Component {
                                 let tree_node = tree.nodes[node.id];
                                 if (is_const(tree_node.obj))
                                 {
-                                    let result = eval(this.view.state.doc.toString().slice(tree_node.start, tree_node.end)) + "";
+                                    let result = eval(this.view.state.doc.toString().slice(tree_node.start, tree_node.end));
+
+                                    if (typeof result === "string")
+                                        result = '"' + result + '"';
+                                    else
+                                        result = result + "";
+
                                     let changes = [{
                                         from: tree_node.start,
                                         to: tree_node.end,
