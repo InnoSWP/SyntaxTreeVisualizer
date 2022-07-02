@@ -76,6 +76,9 @@ export function get_tree(obj, nodes=[], edges=[], depth=-1)
         case "PropertyDefinition":
             return build_property_definition(obj, nodes, edges, depth+1);
 
+        case "ThisExpression":
+            return build_this_expression(obj, nodes, edges, depth+1);
+
         default:
             return build_default(obj, nodes, edges, depth+1);
     }
@@ -92,6 +95,8 @@ function get_member_expression_name(member_expression)
     }
     if (tmp.type === "Identifier")
         name = tmp.name + name;
+    else if (tmp.type === "ThisExpression")
+        name = "this" + name;
 
     if (name === "")
         name = "MemberExpression"
@@ -773,4 +778,14 @@ function build_class_declaration(obj, nodes, edges, depth)
         nodes: nodes,
         edges: edges
     };
+}
+
+function build_this_expression(obj, nodes, edges, depth)
+{
+    nodes.push(create_node(obj, "this", depth));
+
+    return {
+        nodes: nodes,
+        edges: edges
+    }
 }
