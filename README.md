@@ -82,3 +82,7 @@ To contribute to the project, create a **pull request** with a detailed explanat
 - Code editor – [CodeMirror](https://github.com/codemirror/codemirror5)
 - Parser – [Acorn](https://github.com/acornjs/acorn)
 - Tree builder – [reaflow](https://github.com/reaviz/reaflow)
+
+<h2 id="references">References</h2>
+
+[1] Aaron W. Hsu, "The key to a data parallel compiler | Proceedings of the 3rd ACM SIGPLAN International Workshop on Libraries, Languages, and Compilers for Array Programming", 2016. [Online]. Available: https://dl.acm.org/doi/10.1145/2935323.2935331 [Accessed: May 27, 2022]
